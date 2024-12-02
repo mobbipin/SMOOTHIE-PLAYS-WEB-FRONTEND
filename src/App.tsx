@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-function App() {
+// Define a TypeScript type for the song objects
+interface Song {
+  _id: string;
+  title: string;
+  artist: string;
+  duration: number; // duration in seconds
+}
+
+const App: React.FC = () => {
+  const [songs, setSongs] = useState<Song[]>([]); // Explicitly type the state
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const response = await axios.get<Song[]>(
+          "http://localhost:5000/api/songs"
+        );
+        setSongs(response.data);
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+      }
+    };
+
+    fetchSongs();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Welcome to Smoothie Plays</h1>
+      <h2>Song List:</h2>
+      <ul>
+        {songs.map((song) => (
+          <li key={song._id}>
+            {song.title} by {song.artist} ({Math.floor(song.duration / 60)}:
+            {song.duration % 60})
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
 export default App;
