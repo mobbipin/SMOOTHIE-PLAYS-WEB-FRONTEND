@@ -27,6 +27,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // init socket
           if (userId) initSocket(userId);
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         updateApiToken(null);
         console.log("Error in auth provider", error);
