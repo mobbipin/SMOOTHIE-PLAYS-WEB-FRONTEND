@@ -1,46 +1,25 @@
-import { RedirectToSignIn, SignIn, SignUp, useAuth } from "@clerk/clerk-react";
-import { Toaster } from "react-hot-toast";
-import { Route, Routes } from "react-router-dom";
-import NotFoundPage from "./pages/404/NotFoundPage";
+import { ClerkProvider } from "@clerk/clerk-react";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
+import { BrowserRouter } from "react-router-dom";
+import AuthProvider from "./provider/AuthProvider.tsx";
 
-function App() {
-  const { isLoaded, isSignedIn } = useAuth();
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isSignedIn) {
-    return (
-      <Routes>
-        {/* Custom Sign-In Page */}
-        <Route
-          path="/sign-in"
-          element={<SignIn path="/sign-in" routing="path" />}
-        />
-
-        {/* Custom Sign-Up Page */}
-        <Route
-          path="/sign-up"
-          element={<SignUp path="/sign-up" routing="path" />}
-        />
-
-        {/* Optionally Redirect to Sign-In if the user is not authenticated */}
-        <Route path="/" element={<RedirectToSignIn />} />
-      </Routes>
-    );
-  }
-
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<NotFoundPage />} /> {/* Main page */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-
-      <Toaster />
-    </>
-  );
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
 }
 
-export default App;
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
+    </ClerkProvider>
+  </StrictMode>
+);
