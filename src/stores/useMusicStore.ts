@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { axiosInstance } from "@/lib/axios";
 import { Album, Song, Stats } from "@/types";
 import toast from "react-hot-toast";
