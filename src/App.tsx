@@ -1,32 +1,15 @@
-import { AuthenticateWithRedirectCallback, useAuth } from "@clerk/clerk-react";
-import { Toaster } from "react-hot-toast";
+import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import { Route, Routes } from "react-router-dom";
-import NotFoundPage from "./pages/404/NotFoundPage";
+
+import AuthCallbackPage from "./pages/auth-callback/AuthCallbackPage";
+
+import { Toaster } from "react-hot-toast";
+import HomePage from "./pages/home/HomePage";
 
 function App() {
-  const { isLoaded, isSignedIn } = useAuth(); // Check if Clerk is loaded and if user is signed in
-
-  if (!isLoaded) {
-    return <div>Loading...</div>; // Wait until Clerk is loaded before rendering
-  }
-
-  if (!isSignedIn) {
-    return (
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <AuthenticateWithRedirectCallback signUpForceRedirectUrl="/auth-callback" />
-          }
-        />
-      </Routes>
-    ); // Redirect to Clerk login if user isn't signed in
-  }
-
   return (
     <>
       <Routes>
-        <Route path="/" element={<NotFoundPage />} /> {/* Main page */}
         <Route
           path="/sso-callback"
           element={
@@ -35,9 +18,9 @@ function App() {
             />
           }
         />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/auth-callback" element={<AuthCallbackPage />} />
+        <Route path="/" element={<HomePage />} />
       </Routes>
-
       <Toaster />
     </>
   );
