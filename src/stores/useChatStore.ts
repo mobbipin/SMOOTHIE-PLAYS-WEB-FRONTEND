@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { axiosInstance } from "@/lib/axios";
 import { Message, User } from "@/types";
-import { create } from "zustand";
 import { io } from "socket.io-client";
+import { create } from "zustand";
 
 interface ChatStore {
 	users: User[];
 	isLoading: boolean;
 	error: string | null;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	socket: any;
 	isConnected: boolean;
 	onlineUsers: Set<string>;
@@ -23,7 +23,7 @@ interface ChatStore {
 	setSelectedUser: (user: User | null) => void;
 }
 
-const baseURL = import.meta.env.MODE === "development" ? "http://localhost:5000" : "/";
+const baseURL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 
 const socket = io(baseURL, {
 	autoConnect: false, // only connect if user is authenticated
@@ -48,7 +48,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		try {
 			const response = await axiosInstance.get("/users");
 			set({ users: response.data });
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			set({ error: error.response.data.message });
 		} finally {
@@ -128,7 +127,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		try {
 			const response = await axiosInstance.get(`/users/messages/${userId}`);
 			set({ messages: response.data });
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			set({ error: error.response.data.message });
 		} finally {

@@ -12,23 +12,6 @@ const updateApiToken = (token: string | null) => {
   else delete axiosInstance.defaults.headers.common["Authorization"];
 };
 
-const syncUserWithBackend = async (token: string) => {
-  try {
-    const response = await axiosInstance.post(
-      "/auth/callback",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    console.log("User synced with backend:", response.data);
-  } catch (error) {
-    console.error("Error syncing user with backend:", error);
-  }
-};
-
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { getToken, userId } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -40,12 +23,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const token = await getToken();
         updateApiToken(token);
-
         if (token) {
-          await syncUserWithBackend(token);
           await checkAdminStatus();
-
-          // Initialize WebSocket connection
+          // init socket
           if (userId) initSocket(userId);
         }
       } catch (error: any) {
@@ -58,7 +38,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     initAuth();
 
-    return () => disconnectSocket(); // Cleanup WebSocket on unmount
+    // clean up
+    return () => disconnectSocket();
   }, [getToken, userId, checkAdminStatus, initSocket, disconnectSocket]);
 
   if (loading)
@@ -70,5 +51,4 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
-
 export default AuthProvider;

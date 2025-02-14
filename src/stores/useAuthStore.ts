@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { axiosInstance } from "@/lib/axios";
 import { create } from "zustand";
 
@@ -20,7 +21,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		try {
 			const response = await axiosInstance.get("/admin/check");
 			set({ isAdmin: response.data.admin });
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			set({ isAdmin: false, error: error.response.data.message });
 		} finally {

@@ -1,8 +1,11 @@
+import FeaturedGridSkeleton from "@/components/skeleteons/FeaturedGridSkeleton";
 import { useMusicStore } from "@/stores/useMusicStore";
 import PlayButton from "./PlayButton";
 
 const FeaturedSection = () => {
-  const { featuredSongs, error } = useMusicStore();
+  const { isLoading, featuredSongs, error } = useMusicStore();
+
+  if (isLoading) return <FeaturedGridSkeleton />;
 
   if (error) return <p className="text-red-500 mb-4 text-lg">{error}</p>;
 
