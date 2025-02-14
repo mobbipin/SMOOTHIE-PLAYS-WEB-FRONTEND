@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -100,7 +101,7 @@ const AddSongDialog = () => {
   return (
     <Dialog open={songDialogOpen} onOpenChange={setSongDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-emerald-500 hover:bg-emerald-600 text-black">
+        <Button className="bg-red-500 hover:bg-red-600 text-black">
           <Plus className="mr-2 h-4 w-4" />
           Add Song
         </Button>
