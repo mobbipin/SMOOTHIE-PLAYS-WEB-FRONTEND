@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { axiosInstance } from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
@@ -11,6 +12,23 @@ const updateApiToken = (token: string | null) => {
   else delete axiosInstance.defaults.headers.common["Authorization"];
 };
 
+const syncUserWithBackend = async (token: string) => {
+  try {
+    const response = await axiosInstance.post(
+      "/auth/callback",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("User synced with backend:", response.data);
+  } catch (error) {
+    console.error("Error syncing user with backend:", error);
+  }
+};
+
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { getToken, userId } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -22,12 +40,14 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const token = await getToken();
         updateApiToken(token);
+
         if (token) {
+          await syncUserWithBackend(token);
           await checkAdminStatus();
-          // init socket
+
+          // Initialize WebSocket connection
           if (userId) initSocket(userId);
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         updateApiToken(null);
         console.log("Error in auth provider", error);
@@ -38,8 +58,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     initAuth();
 
-    // clean up
-    return () => disconnectSocket();
+    return () => disconnectSocket(); // Cleanup WebSocket on unmount
   }, [getToken, userId, checkAdminStatus, initSocket, disconnectSocket]);
 
   if (loading)
@@ -51,4 +70,5 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
+
 export default AuthProvider;
