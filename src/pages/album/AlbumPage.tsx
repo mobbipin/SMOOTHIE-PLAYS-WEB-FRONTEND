@@ -82,7 +82,7 @@ const AlbumPage = () => {
               <Button
                 onClick={handlePlayAlbum}
                 size="icon"
-                className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-400 
+                className="w-14 h-14 rounded-full bg-appColor hover:bg-appColor
                 hover:scale-105 transition-all"
               >
                 {isPlaying &&

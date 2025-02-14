@@ -5,6 +5,7 @@ import AuthCallbackPage from "./pages/auth-callback/AuthCallbackPage";
 
 import { Toaster } from "react-hot-toast";
 import MainLayout from "./layout/MainLayout";
+import ChatPage from "./pages/chat/ChatPage";
 import HomePage from "./pages/home/HomePage";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/auth-callback" element={<AuthCallbackPage />} />
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/chat" element={<ChatPage />} />
         </Route>
       </Routes>
       <Toaster />
