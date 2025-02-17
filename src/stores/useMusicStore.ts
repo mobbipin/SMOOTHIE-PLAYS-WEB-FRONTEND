@@ -25,8 +25,8 @@ interface MusicStore {
   fetchSongs: () => Promise<void>;
   deleteSong: (id: string) => Promise<void>;
   deleteAlbum: (id: string) => Promise<void>;
-  setEditingSong: (song: Song | null) => void; // Action to set the editing song
-  updateSong: (id: string, updatedSongData: Partial<Song>) => Promise<void>; // Action to update song
+  setEditingSong: (song: Song | null) => void; 
+  updateSong: (id: string, updatedSongData: Partial<Song>) => Promise<void>; 
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
